@@ -1,0 +1,238 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Planner de Estudos 2026 — Challenge A (Versão Brasileira)</title>
+  <style>
+    :root{
+      --bg:#f7f6f3; --paper:#fffefc; --accent:#8aa29e; --muted:#6b6b6b; --soft:#f0ebe6;
+      --card-shadow: 0 6px 18px rgba(37,44,49,0.08);
+      --dotted: rgba(0,0,0,0.12);
+    }
+    html,body{height:100%;margin:0;font-family: "Times New Roman", Georgia, serif;background:var(--bg);color:#222}
+    .wrap{max-width:1100px;margin:28px auto;padding:24px}
+    header{display:flex;align-items:center;gap:16px}
+    .brand{background:linear-gradient(90deg,var(--accent),#b7c8c0);padding:14px 18px;border-radius:12px;color:white;box-shadow:var(--card-shadow)}
+    h1{margin:0;font-size:20px}
+    p.lead{margin:6px 0 0;color:var(--muted)}
+
+    .controls{margin-top:18px;display:flex;gap:8px;flex-wrap:wrap}
+    button{background:var(--paper);border:1px solid #eee;padding:8px 12px;border-radius:8px;cursor:pointer}
+    button.primary{background:var(--accent);color:white;border:none}
+
+    main{margin-top:18px}
+    .summary{display:grid;grid-template-columns:1fr 320px;gap:18px}
+    .card{background:var(--paper);padding:18px;border-radius:12px;box-shadow:var(--card-shadow)}
+
+    .months{display:grid;grid-template-columns:repeat(3,1fr);gap:10px}
+    .month{padding:10px;border-radius:8px;background:linear-gradient(180deg,#fff,#fbfaf8)}
+    .month h4{margin:0 0 6px;font-size:14px}
+    .month p{margin:0;font-size:13px;color:var(--muted)}
+
+    .weeks-nav{margin-top:14px;display:flex;gap:6px;flex-wrap:wrap}
+    .weeks-nav button{padding:6px 10px;font-size:13px}
+
+    /* planner area */
+    .planner{margin-top:18px}
+    .week{display:block;margin-bottom:18px;padding:18px;border-radius:12px;background:var(--paper);box-shadow:var(--card-shadow)}
+    .week .head{display:flex;justify-content:space-between;align-items:flex-start;gap:12px}
+    .week h3{margin:0}
+    .week .verse{font-style:italic;color:var(--muted);margin-top:6px}
+
+    .axes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+    .axis{background:var(--soft);padding:10px;border-radius:8px;min-height:86px}
+    .axis h5{margin:0 0 8px;font-size:13px}
+    .axis .field{border-bottom:2px dotted var(--dotted);padding:6px 4px;min-height:28px}
+
+    .daily{margin-top:12px;display:grid;grid-template-columns:repeat(7,1fr);gap:8px}
+    .day{background:white;padding:8px;border-radius:8px;border:1px solid #f0f0f0;min-height:88px}
+    .day h6{margin:0 0 6px;font-size:13px}
+    .day .f{border-bottom:1px dashed #eee;padding-bottom:6px;min-height:34px}
+
+    .tutoria{margin-top:12px}
+    .notes{min-height:70px;border:1px dashed #e6e6e6;padding:10px;border-radius:8px}
+
+    .dotted-line{border-bottom:2px dotted var(--dotted);padding:8px 4px;min-height:18px}
+
+    footer{margin-top:28px;text-align:center;color:var(--muted);font-size:13px}
+
+    /* print styles */
+    @media print{
+      body{background:white}
+      .controls, .brand, footer, .weeks-nav {display:none}
+      .wrap{max-width:100%;padding:0}
+      .week{page-break-inside:avoid}
+    }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="brand">
+        <h1>Planner de Estudos 2026 — Challenge A</h1>
+        <div style="font-size:12px;opacity:.95">Versão Brasileira • Estilo clássico cristão</div>
+      </div>
+      <div style="flex:1">
+        <p class="lead">Tema do ano: <strong>Firmes na Verdade, crescendo em graça e conhecimento</strong></p>
+        <p class="lead" style="margin-top:6px">📖 <em>Antes, crescei na graça e no conhecimento de nosso Senhor e Salvador Jesus Cristo.</em> — 2 Pedro 3:18</p>
+      </div>
+    </header>
+
+    <div class="controls">
+      <button onclick="showAllWeeks()">Mostrar todas as semanas</button>
+      <button onclick="printAll()" class="primary">Imprimir Planner (todas as semanas)</button>
+      <label style="display:inline-flex;align-items:center;gap:8px;padding:6px 10px;background:white;border-radius:8px;border:1px solid #eee">
+        Semana: <select id="selectWeek" onchange="showWeek(this.value)" style="margin-left:8px;padding:4px 6px">
+        </select>
+      </label>
+      <button onclick="printWeek()">Imprimir semana selecionada</button>
+      <button onclick="saveHTML()">Baixar .html</button>
+    </div>
+
+    <main>
+      <section class="summary">
+        <div class="card">
+          <h2>Versículos mensais</h2>
+          <div class="months" id="months">
+            <!-- meses serão injetados -->
+          </div>
+        </div>
+        <aside class="card">
+          <h3>Visão rápida</h3>
+          <p style="color:var(--muted)">Seis eixos do Challenge A</p>
+          <ul style="padding-left:18px;margin-top:8px;color:var(--muted)">
+            <li>🧠 Lógica</li>
+            <li>✒️ Gramática</li>
+            <li>🔬 Pesquisa (Ciências)</li>
+            <li>📚 Redação</li>
+            <li>🧭 Geografia</li>
+            <li>🎙️ Dialética / Retórica</li>
+          </ul>
+          <div style="margin-top:12px;color:var(--muted)">Programa: <strong>30 semanas</strong></div>
+        </aside>
+      </section>
+
+      <section class="planner" id="planner">
+        <!-- semanas injetadas aqui -->
+      </section>
+
+    </main>
+
+    <footer>
+      Desenvolvido para Raniere Dantas Valença — Planner interativo (HTML) • Pronto para publicar em GitHub Pages
+    </footer>
+  </div>
+
+<script>
+// Versículos mensais
+const months = [
+  {m:'Janeiro',t:'Propósito e disciplina',v:'Colossenses 3:23'},
+  {m:'Fevereiro',t:'Perseverança',v:'Gálatas 6:9'},
+  {m:'Março',t:'Sabedoria',v:'Tiago 1:5'},
+  {m:'Abril',t:'Coragem',v:'Josué 1:9'},
+  {m:'Maio',t:'Gratidão',v:'1 Tessalonicenses 5:18'},
+  {m:'Junho',t:'Fé ativa',v:'Hebreus 11:1'},
+  {m:'Julho',t:'Descanso e confiança',v:'Mateus 11:28'},
+  {m:'Agosto',t:'Amor e serviço',v:'João 13:35'},
+  {m:'Setembro',t:'Humildade',v:'Filipenses 2:3'},
+  {m:'Outubro',t:'Esperança',v:'Romanos 15:13'},
+  {m:'Novembro',t:'Alegria no Senhor',v:'Filipenses 4:4'},
+  {m:'Dezembro',t:'Fidelidade',v:'Apocalipse 2:10'}
+];
+const monthsEl = document.getElementById('months');
+months.forEach(mt=>{
+  const d = document.createElement('div'); d.className='month';
+  d.innerHTML = `<h4>${mt.m} — ${mt.t}</h4><p><em>${mt.v}</em></p>`;
+  monthsEl.appendChild(d);
+});
+
+// Gerar 30 semanas a partir de 2026-01-01
+const planner = document.getElementById('planner');
+const sel = document.getElementById('selectWeek');
+const startDate = new Date(2026,0,1); // Jan 1 2026
+const totalWeeks = 30;
+
+function fmtDate(d){return (String(d.getDate()).padStart(2,'0'))+"/"+String(d.getMonth()+1).padStart(2,'0')+"/"+d.getFullYear();}
+
+for(let w=1; w<=totalWeeks; w++){
+  const start = new Date(startDate.getTime()); start.setDate(startDate.getDate() + (w-1)*7);
+  const end = new Date(start.getTime()); end.setDate(start.getDate()+6);
+  const weekEl = document.createElement('article'); weekEl.className='week'; weekEl.id = 'week-'+w;
+  weekEl.innerHTML = `
+    <div class="head">
+      <div>
+        <h3>Semana ${w} — ${fmtDate(start)} a ${fmtDate(end)}</h3>
+        <div class="verse">📖 <em>"Ensina-nos a contar os nossos dias, de tal maneira que alcancemos corações sábios." — Salmo 90:12</em></div>
+      </div>
+      <div style="text-align:right;color:var(--muted);font-size:13px">Eixos: 🧠 ✒️ 🔬 📚 🧭 🎙️</div>
+    </div>
+
+    <div class="axes">
+      <div class="axis"><h5>🧠 Lógica</h5><div class="field" contenteditable="true" data-placeholder="Tópico / Meta..."></div></div>
+      <div class="axis"><h5>✒️ Gramática</h5><div class="field" contenteditable="true"></div></div>
+      <div class="axis"><h5>🔬 Pesquisa (Ciências)</h5><div class="field" contenteditable="true"></div></div>
+      <div class="axis"><h5>📚 Redação</h5><div class="field" contenteditable="true"></div></div>
+      <div class="axis"><h5>🧭 Geografia</h5><div class="field" contenteditable="true"></div></div>
+      <div class="axis"><h5>🎙️ Dialética / Retórica</h5><div class="field" contenteditable="true"></div></div>
+    </div>
+
+    <div class="daily">
+      <div class="day"><h6>Segunda</h6><div class="f" contenteditable="true"></div></div>
+      <div class="day"><h6>Terça</h6><div class="f" contenteditable="true"></div></div>
+      <div class="day"><h6>Quarta</h6><div class="f" contenteditable="true"></div></div>
+      <div class="day"><h6>Quinta</h6><div class="f" contenteditable="true"></div></div>
+      <div class="day"><h6>Sexta</h6><div class="f" contenteditable="true"></div></div>
+      <div class="day"><h6>Sábado</h6><div class="f" contenteditable="true"></div></div>
+      <div class="day"><h6>Domingo</h6><div class="f" contenteditable="true"></div></div>
+    </div>
+
+    <div class="tutoria">
+      <h4>Tutoria e Reflexão</h4>
+      <div style="display:flex;gap:8px;margin-bottom:8px"><div class="dotted-line" contenteditable="true" style="flex:1">Tutor(a):</div><div class="dotted-line" style="width:120px" contenteditable="true">Data:</div></div>
+      <div class="notes" contenteditable="true">Assuntos tratados, dúvidas, tarefas para próxima semana...</div>
+    </div>
+  `;
+  planner.appendChild(weekEl);
+
+  const opt = document.createElement('option'); opt.value = w; opt.text = 'Semana '+w; sel.appendChild(opt);
+}
+
+// show/hide helpers
+function showWeek(n){
+  if(!n){showAllWeeks();return}
+  for(let i=1;i<=totalWeeks;i++){
+    const el = document.getElementById('week-'+i);
+    el.style.display = (i==n)?'block':'none';
+  }
+}
+function showAllWeeks(){
+  for(let i=1;i<=totalWeeks;i++) document.getElementById('week-'+i).style.display='block';
+  sel.value='';
+}
+
+// print helpers
+function printAll(){
+  showAllWeeks(); setTimeout(()=>window.print(),50);
+}
+function printWeek(){
+  const n = sel.value || 1; showWeek(n); setTimeout(()=>window.print(),50);
+}
+
+// save HTML
+function saveHTML(){
+  const blob = new Blob([document.documentElement.outerHTML],{type:'text/html;charset=utf-8'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a'); a.href=url; a.download='Planner_ChallengeA_2026_interativo.html'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+
+// placeholder handling (optional UX)
+document.addEventListener('click',e=>{
+  if(e.target.matches('[data-placeholder]')){
+    const el=e.target; if(el.innerText.trim()==='') el.innerText='';
+  }
+});
+
+</script>
+</body>
+</html>
