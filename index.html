@@ -1,188 +1,225 @@
-<!doctype html>
+<!DOCTYPE html>
 <html lang="pt-BR">
 <head>
-<meta charset="utf-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Planner de Estudos — Challenge A</title>
+<meta charset="UTF-8" />
+<title>Planner Challenge A – Web</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <style>
-:root{
-  --bg:#f7f6f3;--paper:#fffefc;--accent:#8aa29e;
-  --muted:#6b6b6b;--soft:#f0ebe6;
-  --shadow:0 6px 18px rgba(0,0,0,.08);
-  --dot:rgba(0,0,0,.25)
+body {
+  font-family: Arial, sans-serif;
+  background: #f4f6f8;
+  margin: 0;
+  padding: 20px;
 }
-html,body{margin:0;background:var(--bg);font-family:"Times New Roman",serif}
-.wrap{max-width:1100px;margin:24px auto;padding:20px}
-header{display:flex;gap:16px;align-items:center}
-.brand{background:linear-gradient(90deg,var(--accent),#b7c8c0);color:#fff;
-padding:14px 18px;border-radius:12px;box-shadow:var(--shadow)}
-.controls{margin:18px 0;display:flex;gap:8px;flex-wrap:wrap}
-button,select{padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff}
-button.primary{background:var(--accent);color:#fff;border:none}
-.week{background:var(--paper);padding:18px;border-radius:12px;
-box-shadow:var(--shadow);margin-bottom:18px}
-.week h3{margin:0}
-.date-box{display:flex;gap:8px;margin:6px 0;font-size:13px;color:var(--muted)}
-.date-box div{border-bottom:2px dotted var(--dot);min-width:130px;padding:4px}
-.axes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
-.axis{background:var(--soft);padding:10px;border-radius:8px}
-.axis h5{margin:0 0 6px;font-size:13px}
-.field{border-bottom:2px dotted var(--dot);min-height:28px}
-.daily{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:12px}
-.day{background:#fff;border:1px solid #eee;border-radius:8px;padding:6px;min-height:80px}
-.day h6{margin:0 0 6px;font-size:13px}
-.f{border-bottom:1px dashed #ccc;min-height:32px}
-.notes{border:1px dashed #ccc;border-radius:8px;padding:10px;min-height:70px;margin-top:8px}
-footer{text-align:center;color:#777;margin-top:24px;font-size:13px}
-@media print{
-  .controls,header,footer{display:none}
-  body{background:#fff}
-  .week{page-break-inside:avoid}
+
+h1 {
+  text-align: center;
+}
+
+.controls {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 10px;
+  justify-content: center;
+  margin-bottom: 20px;
+}
+
+input[type="date"], select, button {
+  padding: 8px;
+  font-size: 14px;
+}
+
+.week {
+  background: white;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 20px;
+}
+
+.week-header {
+  font-weight: bold;
+  margin-bottom: 10px;
+}
+
+.day {
+  border: 1px solid #ddd;
+  border-radius: 6px;
+  padding: 10px;
+  margin-bottom: 10px;
+}
+
+.day.today {
+  border: 2px solid #0077cc;
+  background: #eef6ff;
+}
+
+.day label {
+  font-weight: bold;
+  display: block;
+  margin-bottom: 5px;
+}
+
+textarea {
+  width: 100%;
+  height: 60px;
+  resize: vertical;
+}
+
+.hidden {
+  display: none;
+}
+
+@media print {
+  .controls {
+    display: none;
+  }
 }
 </style>
 </head>
 
 <body>
-<div class="wrap">
 
-<header>
-  <div class="brand">
-    <h2>Planner Challenge A</h2>
-    <div style="font-size:12px">Educação Clássica Cristã</div>
-  </div>
-  <div>
-    <p><strong>Tema:</strong> Firmes na Verdade</p>
-    <p style="font-style:italic;color:#555">2 Pedro 3:18</p>
-  </div>
-</header>
+<h1>Planner Challenge A – Web</h1>
 
 <div class="controls">
-  <button onclick="mostrarTodas()">Mostrar todas</button>
-
-  <label>
-    Semana:
-    <select id="seletor" onchange="mostrarSemana(this.value)">
-      <option value="">-- selecione --</option>
-    </select>
-  </label>
-
-  <button onclick="imprimirSemana()">Imprimir semana</button>
-  <button onclick="baixarSemana()">Baixar semana (.html)</button>
-  <button class="primary" onclick="window.print()">Imprimir tudo</button>
+  <input type="date" id="startDate">
+  <select id="weekSelector"></select>
+  <button onclick="showSelectedWeek()">Mostrar semana</button>
+  <button onclick="showAllWeeks()">Mostrar todas</button>
+  <button onclick="printWeek()">Imprimir semana</button>
 </div>
 
-<main id="planner"></main>
-
-<footer>
-Planner interativo • GitHub Pages • Raniere Dantas Valença
-</footer>
-
-</div>
+<div id="planner"></div>
 
 <script>
 const planner = document.getElementById("planner");
-const seletor = document.getElementById("seletor");
-const TOTAL = 30;
+const weekSelector = document.getElementById("weekSelector");
+const startDateInput = document.getElementById("startDate");
 
-// cria semanas
-for(let i=1;i<=TOTAL;i++){
-  const sec=document.createElement("section");
-  sec.className="week";
-  sec.id="week-"+i;
-  sec.innerHTML=`
-    <h3>Semana ${i}</h3>
-    <div class="date-box">
-      <div contenteditable>Início:</div>
-      <div contenteditable>Fim:</div>
-    </div>
-    <div class="axes">
-      <div class="axis"><h5>🧠 Lógica</h5><div class="field" contenteditable></div></div>
-      <div class="axis"><h5>✒️ Gramática</h5><div class="field" contenteditable></div></div>
-      <div class="axis"><h5>🔬 Pesquisa</h5><div class="field" contenteditable></div></div>
-      <div class="axis"><h5>📚 Redação</h5><div class="field" contenteditable></div></div>
-      <div class="axis"><h5>🧭 Geografia</h5><div class="field" contenteditable></div></div>
-      <div class="axis"><h5>🎙️ Retórica</h5><div class="field" contenteditable></div></div>
-    </div>
-    <div class="daily">
-      ${["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map(d=>`
-        <div class="day"><h6>${d}</h6><div class="f" contenteditable></div></div>
-      `).join("")}
-    </div>
-    <h4>Tutoria / Reflexão</h4>
-    <div class="notes" contenteditable></div>
-  `;
-  planner.appendChild(sec);
+const DAYS = ["Segunda", "Terça", "Quarta", "Quinta", "Sexta", "Sábado", "Domingo"];
+let weeks = [];
 
-  const opt=document.createElement("option");
-  opt.value=i;
-  opt.text="Semana "+i;
-  seletor.appendChild(opt);
+/* ===== Utilidades ===== */
+function formatDate(date) {
+  return date.toISOString().split("T")[0];
 }
 
-// funções
-function mostrarTodas(){
-  document.querySelectorAll(".week").forEach(w=>w.style.display="block");
-  seletor.value="";
+function getMonday(date) {
+  const d = new Date(date);
+  const day = d.getDay() || 7;
+  if (day !== 1) d.setDate(d.getDate() - day + 1);
+  return d;
 }
 
-function mostrarSemana(n){
-  if(!n){mostrarTodas();return}
-  document.querySelectorAll(".week").forEach(w=>w.style.display="none");
-  document.getElementById("week-"+n).style.display="block";
-}
+/* ===== Criar semana ===== */
+function createWeek(startDate) {
+  const monday = getMonday(startDate);
+  const weekId = formatDate(monday);
 
-function imprimirSemana(){
-  const n=seletor.value;
-  if(!n){alert("Selecione uma semana");return}
-  mostrarSemana(n);
-  setTimeout(()=>window.print(),50);
-}
+  if (weeks.find(w => w.id === weekId)) return;
 
-function baixarSemana(){
-  const n=seletor.value;
-  if(!n){alert("Selecione uma semana");return}
-  const semana=document.getElementById("week-"+n).outerHTML;
-  const html=`<!doctype html><html><head><meta charset="utf-8"><title>Semana ${n}</title></head><body>${semana}</body></html>`;
-  const blob=new Blob([html],{type:"text/html"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download=`Semana_${n}_Planner_ChallengeA.html`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
+  const week = { id: weekId, days: [] };
 
-// ===============================
-// SALVAMENTO AUTOMÁTICO
-// ===============================
+  for (let i = 0; i < 7; i++) {
+    const d = new Date(monday);
+    d.setDate(d.getDate() + i);
 
-// Gera uma chave única baseada na posição do elemento
-function getStorageKey(el) {
-  const week = el.closest('.week')?.id || 'global';
-  const index = [...document.querySelectorAll('[contenteditable]')].indexOf(el);
-  return `planner_${week}_${index}`;
-}
-
-// Salvar ao digitar
-document.addEventListener('input', function (e) {
-  if (e.target.hasAttribute('contenteditable')) {
-    const key = getStorageKey(e.target);
-    localStorage.setItem(key, e.target.innerHTML);
+    week.days.push({
+      name: DAYS[i],
+      date: formatDate(d),
+      text: localStorage.getItem(`${weekId}-${i}`) || ""
+    });
   }
+
+  weeks.push(week);
+  updateSelector();
+  render();
+}
+
+/* ===== Renderização ===== */
+function render(showAll = false) {
+  planner.innerHTML = "";
+
+  const todayStr = formatDate(new Date());
+
+  weeks.forEach((week, wIndex) => {
+    const container = document.createElement("div");
+    container.className = "week";
+    if (!showAll && weekSelector.value !== week.id) {
+      container.classList.add("hidden");
+    }
+
+    const header = document.createElement("div");
+    header.className = "week-header";
+    header.innerText = `Semana iniciando em ${week.id}`;
+    container.appendChild(header);
+
+    week.days.forEach((day, dIndex) => {
+      const dayDiv = document.createElement("div");
+      dayDiv.className = "day";
+      if (day.date === todayStr) dayDiv.classList.add("today");
+
+      const label = document.createElement("label");
+      label.innerText = `${day.name} – ${day.date}`;
+      dayDiv.appendChild(label);
+
+      const textarea = document.createElement("textarea");
+      textarea.value = day.text;
+      textarea.oninput = () => {
+        localStorage.setItem(`${week.id}-${dIndex}`, textarea.value);
+        week.days[dIndex].text = textarea.value;
+      };
+
+      dayDiv.appendChild(textarea);
+      container.appendChild(dayDiv);
+    });
+
+    planner.appendChild(container);
+  });
+}
+
+/* ===== Controles ===== */
+function updateSelector() {
+  weekSelector.innerHTML = "";
+  weeks.forEach(w => {
+    const opt = document.createElement("option");
+    opt.value = w.id;
+    opt.innerText = `Semana ${w.id}`;
+    weekSelector.appendChild(opt);
+  });
+}
+
+function showSelectedWeek() {
+  render(false);
+}
+
+function showAllWeeks() {
+  render(true);
+}
+
+function printWeek() {
+  render(false);
+  window.print();
+}
+
+/* ===== Eventos ===== */
+startDateInput.addEventListener("change", e => {
+  createWeek(new Date(e.target.value));
 });
 
-// Restaurar ao carregar
-window.addEventListener('DOMContentLoaded', function () {
-  document.querySelectorAll('[contenteditable]').forEach(el => {
-    const key = getStorageKey(el);
-    const saved = localStorage.getItem(key);
-    if (saved !== null) {
-      el.innerHTML = saved;
-    }
-  });
-});
+/* ===== Inicialização ===== */
+const savedWeeks = Object.keys(localStorage)
+  .map(k => k.split("-")[0])
+  .filter((v, i, a) => a.indexOf(v) === i);
+
+savedWeeks.forEach(w => createWeek(new Date(w)));
+
+if (weeks.length) {
+  weekSelector.value = weeks[0].id;
+  render(false);
+}
 </script>
 
 </body>
 </html>
-
