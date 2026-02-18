@@ -1,193 +1,46 @@
 <!doctype html>
 <html lang="pt-BR">
 <head>
-  <meta charset="utf-8" />
-  <meta name="viewport" content="width=device-width,initial-scale=1" />
-  <title>Planner de Estudos 2026 — Challenge A (Versão BR)</title>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Planner de Estudos — Challenge A</title>
 
-  <style>
-    :root{
-      --bg:#f7f6f3;
-      --paper:#fffefc;
-      --accent:#8aa29e;
-      --muted:#6b6b6b;
-      --soft:#f0ebe6;
-      --card-shadow: 0 6px 18px rgba(37,44,49,0.08);
-      --dotted: rgba(0,0,0,0.12);
-    }
-
-    html,body{
-      height:100%;
-      margin:0;
-      font-family:"Times New Roman", Georgia, serif;
-      background:var(--bg);
-      color:#222
-    }
-
-    .wrap{max-width:1100px;margin:28px auto;padding:24px}
-
-    header{display:flex;align-items:center;gap:16px}
-
-    .brand{
-      background:linear-gradient(90deg,var(--accent),#b7c8c0);
-      padding:14px 18px;
-      border-radius:12px;
-      color:white;
-      box-shadow:var(--card-shadow)
-    }
-
-    h1{margin:0;font-size:20px}
-    p.lead{margin:6px 0 0;color:var(--muted)}
-
-    .controls{
-      margin-top:18px;
-      display:flex;
-      gap:8px;
-      flex-wrap:wrap
-    }
-
-    button{
-      background:var(--paper);
-      border:1px solid #eee;
-      padding:8px 12px;
-      border-radius:8px;
-      cursor:pointer
-    }
-
-    button.primary{
-      background:var(--accent);
-      color:white;
-      border:none
-    }
-
-    main{margin-top:18px}
-
-    .summary{
-      display:grid;
-      grid-template-columns:1fr 320px;
-      gap:18px
-    }
-
-    .card{
-      background:var(--paper);
-      padding:18px;
-      border-radius:12px;
-      box-shadow:var(--card-shadow)
-    }
-
-    .months{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px
-    }
-
-    .month{
-      padding:10px;
-      border-radius:8px;
-      background:linear-gradient(180deg,#fff,#fbfaf8)
-    }
-
-    .month h4{margin:0 0 6px;font-size:14px}
-    .month p{margin:0;font-size:13px;color:var(--muted)}
-
-    .planner{margin-top:18px}
-
-    .week{
-      margin-bottom:18px;
-      padding:18px;
-      border-radius:12px;
-      background:var(--paper);
-      box-shadow:var(--card-shadow)
-    }
-
-    .week .head{
-      display:flex;
-      justify-content:space-between;
-      gap:12px
-    }
-
-    .date-box{
-      display:flex;
-      gap:8px;
-      margin-top:6px;
-      font-size:13px;
-      color:var(--muted)
-    }
-
-    .date-box div{
-      border-bottom:2px dotted var(--dotted);
-      padding:4px 6px;
-      min-width:120px
-    }
-
-    .axes{
-      display:grid;
-      grid-template-columns:repeat(3,1fr);
-      gap:10px;
-      margin-top:12px
-    }
-
-    .axis{
-      background:var(--soft);
-      padding:10px;
-      border-radius:8px;
-      min-height:86px
-    }
-
-    .axis h5{margin:0 0 8px;font-size:13px}
-
-    .axis .field{
-      border-bottom:2px dotted var(--dotted);
-      padding:6px 4px;
-      min-height:28px
-    }
-
-    .daily{
-      margin-top:12px;
-      display:grid;
-      grid-template-columns:repeat(7,1fr);
-      gap:8px
-    }
-
-    .day{
-      background:white;
-      padding:8px;
-      border-radius:8px;
-      border:1px solid #f0f0f0;
-      min-height:88px
-    }
-
-    .day h6{margin:0 0 6px;font-size:13px}
-
-    .day .f{
-      border-bottom:1px dashed #eee;
-      padding-bottom:6px;
-      min-height:34px
-    }
-
-    .tutoria{margin-top:12px}
-
-    .notes{
-      min-height:70px;
-      border:1px dashed #e6e6e6;
-      padding:10px;
-      border-radius:8px
-    }
-
-    footer{
-      margin-top:28px;
-      text-align:center;
-      color:var(--muted);
-      font-size:13px
-    }
-
-    @media print{
-      body{background:white}
-      .controls, footer, .brand{display:none}
-      .wrap{max-width:100%;padding:0}
-      .week{page-break-inside:avoid}
-    }
-  </style>
+<style>
+:root{
+  --bg:#f7f6f3;--paper:#fffefc;--accent:#8aa29e;
+  --muted:#6b6b6b;--soft:#f0ebe6;
+  --shadow:0 6px 18px rgba(0,0,0,.08);
+  --dot:rgba(0,0,0,.25)
+}
+html,body{margin:0;background:var(--bg);font-family:"Times New Roman",serif}
+.wrap{max-width:1100px;margin:24px auto;padding:20px}
+header{display:flex;gap:16px;align-items:center}
+.brand{background:linear-gradient(90deg,var(--accent),#b7c8c0);color:#fff;
+padding:14px 18px;border-radius:12px;box-shadow:var(--shadow)}
+.controls{margin:18px 0;display:flex;gap:8px;flex-wrap:wrap}
+button,select{padding:8px 12px;border-radius:8px;border:1px solid #ddd;background:#fff}
+button.primary{background:var(--accent);color:#fff;border:none}
+.week{background:var(--paper);padding:18px;border-radius:12px;
+box-shadow:var(--shadow);margin-bottom:18px}
+.week h3{margin:0}
+.date-box{display:flex;gap:8px;margin:6px 0;font-size:13px;color:var(--muted)}
+.date-box div{border-bottom:2px dotted var(--dot);min-width:130px;padding:4px}
+.axes{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:12px}
+.axis{background:var(--soft);padding:10px;border-radius:8px}
+.axis h5{margin:0 0 6px;font-size:13px}
+.field{border-bottom:2px dotted var(--dot);min-height:28px}
+.daily{display:grid;grid-template-columns:repeat(7,1fr);gap:8px;margin-top:12px}
+.day{background:#fff;border:1px solid #eee;border-radius:8px;padding:6px;min-height:80px}
+.day h6{margin:0 0 6px;font-size:13px}
+.f{border-bottom:1px dashed #ccc;min-height:32px}
+.notes{border:1px dashed #ccc;border-radius:8px;padding:10px;min-height:70px;margin-top:8px}
+footer{text-align:center;color:#777;margin-top:24px;font-size:13px}
+@media print{
+  .controls,header,footer{display:none}
+  body{background:#fff}
+  .week{page-break-inside:avoid}
+}
+</style>
 </head>
 
 <body>
@@ -195,82 +48,111 @@
 
 <header>
   <div class="brand">
-    <h1>Planner de Estudos 2026 — Challenge A</h1>
-    <div style="font-size:12px">Versão Brasileira • Educação Clássica Cristã</div>
+    <h2>Planner Challenge A</h2>
+    <div style="font-size:12px">Educação Clássica Cristã</div>
   </div>
   <div>
-    <p class="lead"><strong>Tema:</strong> Firmes na Verdade, crescendo em graça e conhecimento</p>
-    <p class="lead">📖 2 Pedro 3:18</p>
+    <p><strong>Tema:</strong> Firmes na Verdade</p>
+    <p style="font-style:italic;color:#555">2 Pedro 3:18</p>
   </div>
 </header>
 
 <div class="controls">
-  <button onclick="showAll()">Mostrar todas</button>
-  <button class="primary" onclick="window.print()">Imprimir Planner</button>
+  <button onclick="mostrarTodas()">Mostrar todas</button>
+
+  <label>
+    Semana:
+    <select id="seletor" onchange="mostrarSemana(this.value)">
+      <option value="">-- selecione --</option>
+    </select>
+  </label>
+
+  <button onclick="imprimirSemana()">Imprimir semana</button>
+  <button onclick="baixarSemana()">Baixar semana (.html)</button>
+  <button class="primary" onclick="window.print()">Imprimir tudo</button>
 </div>
 
 <main id="planner"></main>
 
 <footer>
-  Planner interativo • GitHub Pages • Raniere Dantas Valença
+Planner interativo • GitHub Pages • Raniere Dantas Valença
 </footer>
 
 </div>
 
 <script>
-const planner = document.getElementById('planner');
-const totalWeeks = 30;
+const planner = document.getElementById("planner");
+const seletor = document.getElementById("seletor");
+const TOTAL = 30;
 
-for(let w=1; w<=totalWeeks; w++){
-  const week = document.createElement('section');
-  week.className = 'week';
-
-  week.innerHTML = `
-    <div class="head">
-      <div>
-        <h3>Semana ${w}</h3>
-        <div class="date-box">
-          <div contenteditable="true">Início:</div>
-          <div contenteditable="true">Fim:</div>
-        </div>
-        <div style="font-style:italic;color:#666;margin-top:6px">
-          📖 Salmo 90:12
-        </div>
-      </div>
+// cria semanas
+for(let i=1;i<=TOTAL;i++){
+  const sec=document.createElement("section");
+  sec.className="week";
+  sec.id="week-"+i;
+  sec.innerHTML=`
+    <h3>Semana ${i}</h3>
+    <div class="date-box">
+      <div contenteditable>Início:</div>
+      <div contenteditable>Fim:</div>
     </div>
-
     <div class="axes">
-      <div class="axis"><h5>🧠 Lógica</h5><div class="field" contenteditable="true"></div></div>
-      <div class="axis"><h5>✒️ Gramática</h5><div class="field" contenteditable="true"></div></div>
-      <div class="axis"><h5>🔬 Pesquisa</h5><div class="field" contenteditable="true"></div></div>
-      <div class="axis"><h5>📚 Redação</h5><div class="field" contenteditable="true"></div></div>
-      <div class="axis"><h5>🧭 Geografia</h5><div class="field" contenteditable="true"></div></div>
-      <div class="axis"><h5>🎙️ Retórica</h5><div class="field" contenteditable="true"></div></div>
+      <div class="axis"><h5>🧠 Lógica</h5><div class="field" contenteditable></div></div>
+      <div class="axis"><h5>✒️ Gramática</h5><div class="field" contenteditable></div></div>
+      <div class="axis"><h5>🔬 Pesquisa</h5><div class="field" contenteditable></div></div>
+      <div class="axis"><h5>📚 Redação</h5><div class="field" contenteditable></div></div>
+      <div class="axis"><h5>🧭 Geografia</h5><div class="field" contenteditable></div></div>
+      <div class="axis"><h5>🎙️ Retórica</h5><div class="field" contenteditable></div></div>
     </div>
-
     <div class="daily">
-      <div class="day"><h6>Seg</h6><div class="f" contenteditable="true"></div></div>
-      <div class="day"><h6>Ter</h6><div class="f" contenteditable="true"></div></div>
-      <div class="day"><h6>Qua</h6><div class="f" contenteditable="true"></div></div>
-      <div class="day"><h6>Qui</h6><div class="f" contenteditable="true"></div></div>
-      <div class="day"><h6>Sex</h6><div class="f" contenteditable="true"></div></div>
-      <div class="day"><h6>Sáb</h6><div class="f" contenteditable="true"></div></div>
-      <div class="day"><h6>Dom</h6><div class="f" contenteditable="true"></div></div>
+      ${["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map(d=>`
+        <div class="day"><h6>${d}</h6><div class="f" contenteditable></div></div>
+      `).join("")}
     </div>
-
-    <div class="tutoria">
-      <h4>Tutoria / Reflexão</h4>
-      <div class="notes" contenteditable="true"></div>
-    </div>
+    <h4>Tutoria / Reflexão</h4>
+    <div class="notes" contenteditable></div>
   `;
+  planner.appendChild(sec);
 
-  planner.appendChild(week);
+  const opt=document.createElement("option");
+  opt.value=i;
+  opt.text="Semana "+i;
+  seletor.appendChild(opt);
 }
 
-function showAll(){
-  document.querySelectorAll('.week').forEach(w=>w.style.display='block');
+// funções
+function mostrarTodas(){
+  document.querySelectorAll(".week").forEach(w=>w.style.display="block");
+  seletor.value="";
+}
+
+function mostrarSemana(n){
+  if(!n){mostrarTodas();return}
+  document.querySelectorAll(".week").forEach(w=>w.style.display="none");
+  document.getElementById("week-"+n).style.display="block";
+}
+
+function imprimirSemana(){
+  const n=seletor.value;
+  if(!n){alert("Selecione uma semana");return}
+  mostrarSemana(n);
+  setTimeout(()=>window.print(),50);
+}
+
+function baixarSemana(){
+  const n=seletor.value;
+  if(!n){alert("Selecione uma semana");return}
+  const semana=document.getElementById("week-"+n).outerHTML;
+  const html=`<!doctype html><html><head><meta charset="utf-8"><title>Semana ${n}</title></head><body>${semana}</body></html>`;
+  const blob=new Blob([html],{type:"text/html"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download=`Semana_${n}_Planner_ChallengeA.html`;
+  a.click();
+  URL.revokeObjectURL(a.href);
 }
 </script>
 
 </body>
 </html>
+
