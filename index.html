@@ -3,60 +3,56 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>Planner de Estudos — Challenge A</title>
+<title>Planner Challenge A 2026</title>
 
 <style>
 :root{
   --bg:#f7f6f3;
   --paper:#fffefc;
   --accent:#8aa29e;
-  --muted:#6b6b6b;
-  --soft:#f0ebe6;
-  --shadow:0 6px 18px rgba(0,0,0,.08);
+  --text:#222;
+  --soft:#efeae4;
   --dot:rgba(0,0,0,.25);
-  --today:#fff2cc;
+}
+[data-theme="dark"]{
+  --bg:#1f1f1f;
+  --paper:#2a2a2a;
+  --accent:#9fbdb6;
+  --text:#f2f2f2;
+  --soft:#333;
+  --dot:rgba(255,255,255,.25);
 }
 
-html,body{
+*{box-sizing:border-box}
+body{
   margin:0;
   background:var(--bg);
+  color:var(--text);
   font-family:"Times New Roman",serif;
 }
-
-.wrap{
-  max-width:1100px;
-  margin:24px auto;
-  padding:20px;
-}
-
+.wrap{max-width:1100px;margin:auto;padding:16px}
 header{
   display:flex;
-  gap:16px;
-  align-items:center;
+  flex-direction:column;
+  gap:8px;
 }
-
 .brand{
   background:linear-gradient(90deg,var(--accent),#b7c8c0);
   color:#fff;
-  padding:14px 18px;
+  padding:14px;
   border-radius:12px;
-  box-shadow:var(--shadow);
 }
-
 .controls{
-  margin:18px 0;
   display:flex;
-  gap:8px;
   flex-wrap:wrap;
+  gap:8px;
+  margin:16px 0;
 }
-
-button,select,input[type="date"]{
+button,select{
   padding:8px 12px;
   border-radius:8px;
-  border:1px solid #ddd;
-  background:#fff;
+  border:1px solid #ccc;
 }
-
 button.primary{
   background:var(--accent);
   color:#fff;
@@ -65,26 +61,16 @@ button.primary{
 
 .week{
   background:var(--paper);
-  padding:18px;
+  padding:16px;
   border-radius:12px;
-  box-shadow:var(--shadow);
-  margin-bottom:18px;
+  margin-bottom:16px;
 }
-
-.week h3{margin:0}
-
 .date-box{
   display:flex;
+  flex-wrap:wrap;
   gap:8px;
   margin:8px 0;
-  font-size:13px;
-  align-items:center;
 }
-
-.date-box span{
-  font-weight:bold;
-}
-
 .date-display{
   border-bottom:2px dotted var(--dot);
   min-width:120px;
@@ -93,22 +79,14 @@ button.primary{
 
 .axes{
   display:grid;
-  grid-template-columns:repeat(3,1fr);
-  gap:10px;
-  margin-top:12px;
+  grid-template-columns:repeat(auto-fit,minmax(150px,1fr));
+  gap:8px;
 }
-
 .axis{
   background:var(--soft);
-  padding:10px;
+  padding:8px;
   border-radius:8px;
 }
-
-.axis h5{
-  margin:0 0 6px;
-  font-size:13px;
-}
-
 .field{
   border-bottom:2px dotted var(--dot);
   min-height:28px;
@@ -116,55 +94,43 @@ button.primary{
 
 .daily{
   display:grid;
-  grid-template-columns:repeat(7,1fr);
+  grid-template-columns:repeat(auto-fit,minmax(120px,1fr));
   gap:8px;
   margin-top:12px;
 }
-
 .day{
-  background:#fff;
-  border:1px solid #eee;
+  border:1px solid #ddd;
   border-radius:8px;
   padding:6px;
-  min-height:90px;
 }
-
 .day.today{
-  background:var(--today);
+  outline:2px solid var(--accent);
 }
-
-.day h6{
-  margin:0 0 4px;
-  font-size:13px;
-}
-
 .day .date{
-  font-size:11px;
-  color:var(--muted);
+  font-size:12px;
+  opacity:.8;
 }
-
 .f{
-  border-bottom:1px dashed #ccc;
+  border-bottom:1px dashed #aaa;
   min-height:32px;
 }
 
 .notes{
-  border:1px dashed #ccc;
+  border:1px dashed #aaa;
   border-radius:8px;
-  padding:10px;
-  min-height:70px;
+  padding:8px;
   margin-top:8px;
 }
 
 footer{
   text-align:center;
-  color:#777;
-  margin-top:24px;
   font-size:13px;
+  opacity:.7;
+  margin:24px 0;
 }
 
 @media print{
-  .controls,header,footer{display:none}
+  header,.controls,footer{display:none}
   body{background:#fff}
   .week{page-break-inside:avoid}
 }
@@ -172,75 +138,64 @@ footer{
 </head>
 
 <body>
-<div class="wrap">
+<div class="wrap" data-theme="light" id="app">
 
 <header>
   <div class="brand">
     <h2>Planner Challenge A</h2>
-    <div style="font-size:12px">Educação Clássica Cristã</div>
+    <div>Educação Clássica Cristã</div>
   </div>
-  <div>
-    <p><strong>Tema:</strong> Firmes na Verdade</p>
-    <p style="font-style:italic;color:#555">2 Pedro 3:18</p>
-  </div>
+  <em>“Crescei na graça e no conhecimento” — 2 Pedro 3:18</em>
 </header>
 
 <div class="controls">
   <button onclick="mostrarTodas()">Mostrar todas</button>
-
-  <label>
-    Semana:
-    <select id="seletor" onchange="mostrarSemana(this.value)">
-      <option value="">-- selecione --</option>
-    </select>
-  </label>
-
-  <label>
-    Início da semana:
-    <input type="date" id="calendario" onchange="aplicarDatas()">
-  </label>
-
+  <select id="seletor" onchange="mostrarSemana(this.value)">
+    <option value="">Selecionar semana</option>
+  </select>
   <button onclick="imprimirSemana()">Imprimir semana</button>
-  <button onclick="baixarSemana()">Baixar semana</button>
+  <button onclick="exportarJSON()">Backup (.json)</button>
+  <button onclick="alternarTema()">Tema claro/escuro</button>
   <button class="primary" onclick="window.print()">Imprimir tudo</button>
 </div>
 
 <main id="planner"></main>
 
 <footer>
-Planner interativo • GitHub Pages • Raniere Dantas Valença
+Planner pessoal • GitHub Pages • Raniere Dantas Valença
 </footer>
 
 </div>
 
 <script>
-const planner = document.getElementById("planner");
-const seletor = document.getElementById("seletor");
-const calendario = document.getElementById("calendario");
-const TOTAL = 52;
-const dias = ["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"];
+const TOTAL=30;
+const planner=document.getElementById("planner");
+const seletor=document.getElementById("seletor");
+const app=document.getElementById("app");
 
 for(let i=1;i<=TOTAL;i++){
-  const sec=document.createElement("section");
-  sec.className="week";
-  sec.id="week-"+i;
-  sec.innerHTML=`
+  const s=document.createElement("section");
+  s.className="week";
+  s.id="week-"+i;
+  s.innerHTML=`
     <h3>Semana ${i}</h3>
-
     <div class="date-box">
-      <span>Início:</span><div class="date-display start"></div>
-      <span>Fim:</span><div class="date-display end"></div>
+      <label>📅 Início:
+        <input type="date" class="calendar">
+      </label>
+      <div>Fim:</div>
+      <div class="date-display end"></div>
     </div>
 
     <div class="axes">
       ${["Lógica","Gramática","Pesquisa","Redação","Geografia","Retórica"]
-        .map(a=>`<div class="axis"><h5>${a}</h5><div class="field" contenteditable></div></div>`).join("")}
+        .map(a=>`<div class="axis"><strong>${a}</strong><div class="field" contenteditable></div></div>`).join("")}
     </div>
 
     <div class="daily">
-      ${dias.map(d=>`
+      ${["Seg","Ter","Qua","Qui","Sex","Sáb","Dom"].map(d=>`
         <div class="day">
-          <h6>${d}</h6>
+          <strong>${d}</strong>
           <div class="date"></div>
           <div class="f" contenteditable></div>
         </div>`).join("")}
@@ -249,91 +204,69 @@ for(let i=1;i<=TOTAL;i++){
     <h4>Tutoria / Reflexão</h4>
     <div class="notes" contenteditable></div>
   `;
-  planner.appendChild(sec);
+  planner.appendChild(s);
 
-  const opt=document.createElement("option");
-  opt.value=i;
-  opt.text="Semana "+i;
-  seletor.appendChild(opt);
+  const o=document.createElement("option");
+  o.value=i;o.textContent="Semana "+i;
+  seletor.appendChild(o);
 }
 
-// ---------- Funções principais ----------
 function mostrarTodas(){
   document.querySelectorAll(".week").forEach(w=>w.style.display="block");
   seletor.value="";
 }
-
 function mostrarSemana(n){
   if(!n){mostrarTodas();return}
   document.querySelectorAll(".week").forEach(w=>w.style.display="none");
-  const week=document.getElementById("week-"+n);
-  week.style.display="block";
-  calendario.scrollIntoView({behavior:"smooth"});
+  document.getElementById("week-"+n).style.display="block";
+  document.getElementById("week-"+n).scrollIntoView({behavior:"smooth"});
 }
-
-function aplicarDatas(){
-  const n=seletor.value;
-  if(!n)return;
-
-  const inicio=new Date(calendario.value+"T00:00");
-  if(isNaN(inicio))return;
-
-  const week=document.getElementById("week-"+n);
-  const end=new Date(inicio);
-  end.setDate(inicio.getDate()+6);
-
-  week.querySelector(".start").textContent=inicio.toLocaleDateString();
-  week.querySelector(".end").textContent=end.toLocaleDateString();
-
-  const dayEls=week.querySelectorAll(".day");
-  dayEls.forEach((d,i)=>{
-    const data=new Date(inicio);
-    data.setDate(inicio.getDate()+i);
-    d.querySelector(".date").textContent=data.toLocaleDateString();
-
-    d.classList.toggle("today",
-      data.toDateString()===new Date().toDateString()
-    );
-  });
-
-  salvarTudo();
-}
-
 function imprimirSemana(){
-  const n=seletor.value;
-  if(!n){alert("Selecione uma semana");return}
-  mostrarSemana(n);
-  setTimeout(()=>window.print(),50);
+  if(!seletor.value)return alert("Selecione uma semana");
+  mostrarSemana(seletor.value);
+  setTimeout(()=>window.print(),100);
+}
+function alternarTema(){
+  app.dataset.theme=app.dataset.theme==="dark"?"light":"dark";
+  localStorage.setItem("tema",app.dataset.theme);
 }
 
-function baixarSemana(){
-  const n=seletor.value;
-  if(!n){alert("Selecione uma semana");return}
-  const semana=document.getElementById("week-"+n).outerHTML;
-  const html=`<!doctype html><html><head><meta charset="utf-8"><title>Semana ${n}</title></head><body>${semana}</body></html>`;
-  const blob=new Blob([html],{type:"text/html"});
-  const a=document.createElement("a");
-  a.href=URL.createObjectURL(blob);
-  a.download=`Semana_${n}_Planner_ChallengeA.html`;
-  a.click();
-  URL.revokeObjectURL(a.href);
-}
-
-// ---------- AUTOSAVE ----------
-function salvarTudo(){
-  localStorage.setItem("planner_data", planner.innerHTML);
-}
-
-function restaurarTudo(){
-  const data=localStorage.getItem("planner_data");
-  if(data) planner.innerHTML=data;
-}
-
-document.addEventListener("input",e=>{
-  if(e.target.hasAttribute("contenteditable")) salvarTudo();
+document.addEventListener("change",e=>{
+  if(!e.target.classList.contains("calendar"))return;
+  const week=e.target.closest(".week");
+  let d=new Date(e.target.value+"T00:00");
+  const dow=d.getDay();
+  d.setDate(d.getDate()-(dow===0?6:dow-1));
+  const end=new Date(d);end.setDate(d.getDate()+6);
+  week.querySelector(".end").textContent=end.toLocaleDateString();
+  week.querySelectorAll(".day").forEach((day,i)=>{
+    const dt=new Date(d);dt.setDate(d.getDate()+i);
+    day.querySelector(".date").textContent=dt.toLocaleDateString();
+    day.classList.toggle("today",dt.toDateString()===new Date().toDateString());
+  });
+  salvarTudo();
 });
 
-window.addEventListener("load",restaurarTudo);
+function salvarTudo(){
+  localStorage.setItem("planner_backup",planner.innerHTML);
+}
+function restaurar(){
+  const b=localStorage.getItem("planner_backup");
+  if(b)planner.innerHTML=b;
+  const t=localStorage.getItem("tema");
+  if(t)app.dataset.theme=t;
+}
+function exportarJSON(){
+  const data={html:planner.innerHTML,tema:app.dataset.theme};
+  const blob=new Blob([JSON.stringify(data,null,2)],{type:"application/json"});
+  const a=document.createElement("a");
+  a.href=URL.createObjectURL(blob);
+  a.download="planner_backup.json";
+  a.click();
+}
+
+document.addEventListener("input",salvarTudo);
+restaurar();
 </script>
 
 </body>
