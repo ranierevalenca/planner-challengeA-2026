@@ -151,6 +151,37 @@ function baixarSemana(){
   a.click();
   URL.revokeObjectURL(a.href);
 }
+
+  <script>
+// ===============================
+// SALVAMENTO AUTOMÁTICO
+// ===============================
+
+// Gera uma chave única baseada na posição do elemento
+function getStorageKey(el) {
+  const week = el.closest('.week')?.id || 'global';
+  const index = [...document.querySelectorAll('[contenteditable]')].indexOf(el);
+  return `planner_${week}_${index}`;
+}
+
+// Salvar ao digitar
+document.addEventListener('input', function (e) {
+  if (e.target.hasAttribute('contenteditable')) {
+    const key = getStorageKey(e.target);
+    localStorage.setItem(key, e.target.innerHTML);
+  }
+});
+
+// Restaurar ao carregar
+window.addEventListener('DOMContentLoaded', function () {
+  document.querySelectorAll('[contenteditable]').forEach(el => {
+    const key = getStorageKey(el);
+    const saved = localStorage.getItem(key);
+    if (saved !== null) {
+      el.innerHTML = saved;
+    }
+  });
+});
 </script>
 
 </body>
